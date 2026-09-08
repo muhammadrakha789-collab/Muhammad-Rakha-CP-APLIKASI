@@ -24,8 +24,7 @@ elif status is None:
     section("Masuk ke workspace","Gunakan akun administrator yang telah dikonfigurasi untuk membuka seluruh modul analitik.")
     st.info("Login diperlukan untuk mengakses dashboard, detail segmen, data pelanggan, dan pipeline upload.")
 else:
-    name=st.session_state.get('name','Pengguna'); st.sidebar.markdown(f"**SESSION**  
-{name}"); authenticator.logout("Keluar","sidebar"); st.sidebar.markdown("---")
+    name=st.session_state.get('name','Pengguna'); st.sidebar.markdown(f"**SESSION**  \n{name}"); authenticator.logout("Keluar","sidebar"); st.sidebar.markdown("---")
     render_hero("Customer Intelligence Workspace","Satu workspace untuk membaca performa pelanggan, menemukan segmen bernilai, mengidentifikasi risiko churn, dan memproses dataset baru.")
     section("Modul analitik","Pilih modul dari sidebar untuk melanjutkan.")
     modules=[("01","Ringkasan","KPI, revenue, distribusi segmen, dan customer value map."),("02","Detail Segmen","Profil RFM dan strategi untuk setiap kelompok pelanggan."),("03","Data Pelanggan","Cari, filter, eksplorasi, dan ekspor data segmentasi."),("04","Unggah Data Baru","Cleaning, RFM, evaluasi cluster, dan segmentasi otomatis.")]

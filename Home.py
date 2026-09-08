@@ -1,4 +1,4 @@
-"""Client Ledger — login gateway and premium BI landing page."""
+"""Client Ledger — login gateway and professional BI landing page."""
 import streamlit as st
 import yaml
 from yaml.loader import SafeLoader
@@ -12,6 +12,7 @@ authenticator=stauth.Authenticate(config['credentials'],config['cookie']['name']
 try: authenticator.login()
 except Exception as e: st.error(f"Terjadi kesalahan saat login: {e}")
 status=st.session_state.get('authentication_status')
+
 if status is False:
     render_hero("Akses ditolak","Username atau password yang dimasukkan belum benar. Silakan coba kembali.","SECURE ACCESS · CLIENT LEDGER")
     st.error("Username atau password salah.")
@@ -24,13 +25,21 @@ elif status is None:
     section("Masuk ke workspace","Gunakan akun administrator yang telah dikonfigurasi untuk membuka seluruh modul analitik.")
     st.info("Login diperlukan untuk mengakses dashboard, detail segmen, data pelanggan, dan pipeline upload.")
 else:
-    name=st.session_state.get('name','Pengguna'); st.sidebar.markdown(f"**SESSION**  \n{name}"); authenticator.logout("Keluar","sidebar"); st.sidebar.markdown("---")
+    name=st.session_state.get('name','Pengguna')
+    st.sidebar.markdown(f"**SESSION**  \n{name}")
+    authenticator.logout("Keluar","sidebar")
+    st.sidebar.markdown("---")
     render_hero("Customer Intelligence Workspace","Satu workspace untuk membaca performa pelanggan, menemukan segmen bernilai, mengidentifikasi risiko churn, dan memproses dataset baru.")
-    section("Modul analitik","Pilih modul dari sidebar untuk melanjutkan.")
-    modules=[("01","Ringkasan","KPI, revenue, distribusi segmen, dan customer value map."),("02","Detail Segmen","Profil RFM dan strategi untuk setiap kelompok pelanggan."),("03","Data Pelanggan","Cari, filter, eksplorasi, dan ekspor data segmentasi."),("04","Unggah Data Baru","Cleaning, RFM, evaluasi cluster, dan segmentasi otomatis.")]
+    section("Modul analitik","Klik salah satu tombol modul di bawah untuk membuka halaman analitik.")
+    modules=[
+        ("01","Ringkasan","KPI, revenue, distribusi segmen, dan customer value map.","pages/1_Ringkasan.py"),
+        ("02","Detail Segmen","Profil RFM dan strategi untuk setiap kelompok pelanggan.","pages/2_Detail_Segmen.py"),
+        ("03","Data Pelanggan","Cari, filter, eksplorasi, dan ekspor data segmentasi.","pages/3_Data_Pelanggan.py"),
+        ("04","Unggah Data Baru","Cleaning, RFM, evaluasi cluster, dan segmentasi otomatis.","pages/4_Unggah_Data_Baru.py")]
     cols=st.columns(4)
-    for col,(num,title,desc) in zip(cols,modules):
+    for col,(num,title,desc,page) in zip(cols,modules):
         with col:
-            st.markdown(f"<div class='seg-card'><div class='seg-badge' style='--seg-color:#8B5CF6'>{num}</div><div><b>{title}</b><span class='desc'>{desc}</span></div></div>",unsafe_allow_html=True)
-    st.markdown("<div class='insight'><b>Workflow:</b> Filter → Explore → Understand → Act. Dashboard dirancang agar hasil clustering tidak berhenti sebagai angka, tetapi dapat diterjemahkan menjadi keputusan pemasaran.</div>",unsafe_allow_html=True)
+            st.markdown(f"<div class='module-card'><div class='module-number'>{num}</div><div class='module-title'>{title}</div><div class='module-desc'>{desc}</div></div>",unsafe_allow_html=True)
+            st.page_link(page,label=f"Buka {title}",icon="→",use_container_width=True)
+    st.markdown("<div class='insight'><b>Alur sistem:</b> Filter → Explore → Understand → Act. Hasil clustering diterjemahkan menjadi insight pelanggan dan rekomendasi yang dapat digunakan untuk pengambilan keputusan.</div>",unsafe_allow_html=True)
     st.caption("RFM · K-Means Clustering · Silhouette Score · Davies-Bouldin Index")

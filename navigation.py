@@ -17,6 +17,10 @@ def render_navigation(active="Home", user_name=None):
         """
         <style>
         section[data-testid="stSidebar"] [data-testid="stSidebarNav"] { display:none; }
+        section[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"] { border:1px solid transparent; border-radius:10px; margin:2px 0; padding:8px 10px; transition:all .16s ease; }
+        section[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"]:hover { background:#111722; border-color:#29334A; transform:translateX(2px); }
+        section[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"][aria-current="page"] { background:linear-gradient(90deg,rgba(139,92,246,.16),rgba(34,211,238,.05)); border-color:#39465F; box-shadow:inset 3px 0 0 #8B5CF6; }
+        section[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"][aria-current="page"] span { color:#F4F7FB !important; font-weight:700; }
         .nav-heading { color:#F4F7FB; font-family:'Space Grotesk',sans-serif; font-size:.82rem; font-weight:700; letter-spacing:.10em; }
         .nav-intro { color:#64748B; font-size:.68rem; margin:2px 0 14px; }
         .nav-group { color:#64748B; font-size:.59rem; font-weight:700; letter-spacing:.14em; margin:14px 3px 5px; }

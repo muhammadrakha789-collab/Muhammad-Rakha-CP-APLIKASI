@@ -3,11 +3,13 @@ import streamlit as st,pandas as pd,plotly.express as px,yaml
 from yaml.loader import SafeLoader
 import streamlit_authenticator as stauth
 from style_and_pipeline import inject_style,render_hero,render_brand,render_kpis,base_layout,COLOR_MAP,clean_transactions,compute_rfm,run_clustering,find_optimal_k
+from navigation import render_navigation
+
 st.set_page_config(page_title='Unggah Data Baru | Client Ledger',page_icon='◆',layout='wide');inject_style();render_brand()
 with open('config.yaml') as f: config=yaml.load(f,Loader=SafeLoader)
 auth=stauth.Authenticate(config['credentials'],config['cookie']['name'],config['cookie']['key'],config['cookie']['expiry_days']);auth.login()
 if not st.session_state.get('authentication_status'): st.warning('Silakan login terlebih dahulu melalui halaman Home.');st.stop()
-st.sidebar.markdown(f"**SESSION**  \n{st.session_state.get('name','Pengguna')}");auth.logout('Keluar','sidebar');st.sidebar.markdown('---');st.sidebar.caption('CSV wajib: Invoice/InvoiceNo, InvoiceDate, Quantity, Price/UnitPrice, Customer ID/CustomerID.')
+render_navigation('Unggah Data Baru',st.session_state.get('name','Pengguna'));auth.logout('Keluar','sidebar');st.sidebar.caption('CSV wajib: Invoice/InvoiceNo, InvoiceDate, Quantity, Price/UnitPrice, Customer ID/CustomerID.')
 render_hero('Data Lab','Upload transaksi baru dan jalankan seluruh pipeline RFM + K-Means tanpa notebook manual.','CLIENT LEDGER · MACHINE LEARNING PIPELINE')
 uploaded=st.file_uploader('Drop file CSV transaksi di sini',type=['csv'])
 if uploaded is None: st.markdown("<div class='insight'><b>Pipeline 4 tahap:</b> Validate & Clean → Calculate RFM → Evaluate k → Cluster & Export.</div>",unsafe_allow_html=True);st.stop()

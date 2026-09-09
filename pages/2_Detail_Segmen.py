@@ -3,15 +3,17 @@ import streamlit as st,pandas as pd,plotly.graph_objects as go,yaml
 from yaml.loader import SafeLoader
 import streamlit_authenticator as stauth
 from style_and_pipeline import inject_style,render_hero,render_brand,base_layout,section,COLOR_MAP,INITIAL_MAP,ORDER,INSIGHTS
+from navigation import render_navigation
+
 st.set_page_config(page_title='Detail Segmen | Client Ledger',page_icon='◆',layout='wide');inject_style();render_brand()
 with open('config.yaml') as f: config=yaml.load(f,Loader=SafeLoader)
 auth=stauth.Authenticate(config['credentials'],config['cookie']['name'],config['cookie']['key'],config['cookie']['expiry_days']);auth.login()
 if not st.session_state.get('authentication_status'): st.warning('Silakan login terlebih dahulu melalui halaman Home.');st.stop()
-st.sidebar.markdown(f"**SESSION**  \n{st.session_state.get('name','Pengguna')}");auth.logout('Keluar','sidebar');st.sidebar.markdown('---')
+render_navigation('Detail Segmen',st.session_state.get('name','Pengguna'));auth.logout('Keluar','sidebar')
 @st.cache_data
 def load(): return pd.read_csv('rfm_segmentasi_pelanggan.csv')
 df=load();st.sidebar.markdown('### Filter analitik');segments=st.sidebar.multiselect('Segmen',ORDER,ORDER);filtered=df[df.Segmen.isin(segments)].copy()
-render_hero('Segment Intelligence','Pahami karakteristik RFM setiap segmen dan ubah hasil clustering menjadi tindakan pemasaran.')
+render_hero('Segment Intelligence','Pahami karakteristik RFM setiap segmen dan ubah hasil clustering menjadi tindakan pemasaran.','CLIENT LEDGER · SEGMENT INTELLIGENCE')
 summary=filtered.groupby('Segmen').agg(Jumlah=('CustomerID','count'),Recency=('Recency','mean'),Frequency=('Frequency','mean'),Monetary=('Monetary','mean'),TotalRevenue=('Monetary','sum')).reindex(ORDER).dropna(how='all').reset_index()
 if summary.empty: st.info('Pilih minimal satu segmen.');st.stop()
 section('RFM profile','Skor dinormalisasi 0–1; Recency dibalik sehingga skor tinggi berarti lebih baru.')
